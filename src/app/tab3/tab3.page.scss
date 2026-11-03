@@ -1,0 +1,25 @@
+.about-container {
+  text-align: center;
+  padding: 20px;
+}
+
+.anime-icon {
+  font-size: 80px;
+  margin-top: 20px;
+}
+
+.about-container h1 {
+  font-size: 28px;
+  font-weight: bold;
+  margin-top: 15px;
+}
+
+.about-container p {
+  color: var(--ion-color-medium);
+  line-height: 1.6;
+  margin-bottom: 25px;
+}
+
+ion-list {
+  text-align: left;
+}

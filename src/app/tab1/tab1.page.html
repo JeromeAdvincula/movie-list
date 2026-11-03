@@ -1,17 +1,79 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Tab 1
-    </ion-title>
+
+<ion-header>
+  <ion-toolbar color="dark">
+    <ion-title>Add Movie</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 1</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
 
-  <app-explore-container name="Tab 1 page"></app-explore-container>
+  <ion-list>
+
+    <ion-item>
+      <ion-input
+        label="Movie Title"
+        labelPlacement="stacked"
+        placeholder="Enter movie title"
+        [(ngModel)]="newMovie.title">
+      </ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-input
+        label="Genre"
+        labelPlacement="stacked"
+        placeholder="Enter genre"
+        [(ngModel)]="newMovie.genre">
+      </ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-input
+        label="Duration (Minutes)"
+        labelPlacement="stacked"
+        type="number"
+        min="1"
+        [(ngModel)]="newMovie.duration">
+      </ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-select
+        label="Status"
+        labelPlacement="stacked"
+        [(ngModel)]="newMovie.status">
+
+        <ion-select-option value="Released">
+          Released
+        </ion-select-option>
+
+        <ion-select-option value="Upcoming">
+          Upcoming
+        </ion-select-option>
+
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-input
+        label="Rating (1-10)"
+        labelPlacement="stacked"
+        type="number"
+        min="1"
+        max="10"
+        [(ngModel)]="newMovie.rating">
+      </ion-input>
+    </ion-item>
+
+  </ion-list>
+
+  <ion-button
+    expand="block"
+    class="ion-margin-top"
+    (click)="addMovie()">
+
+    ADD MOVIE
+
+  </ion-button>
+
 </ion-content>
