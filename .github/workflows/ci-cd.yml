@@ -1,0 +1,78 @@
+
+name: Movie List CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  continuous-integration:
+    name: Continuous Integration
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests if available
+        run: npm test --if-present -- --watch=false
+
+      - name: Build Movie List
+        run: npm run build
+
+  continuous-deployment:
+    name: Continuous Deployment
+    needs: continuous-integration
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: [self-hosted, Windows, X64]
+
+    steps:
+      - name: Checkout latest code
+        uses: actions/checkout@v4
+
+      - name: Build Movie List Docker image
+        shell: powershell
+        run: docker build -t movie-list:latest .
+
+      - name: Remove previous container
+        shell: powershell
+        run: |
+          docker rm -f movie-list-container 2>$null
+          exit 0
+
+      - name: Start updated container
+        shell: powershell
+        run: |
+          docker run -d --name movie-list-container --restart unless-stopped -p 8100:8100 movie-list:latest
+
+      - name: Verify Movie List application
+        shell: powershell
+        run: |
+          $success = $false
+          for ($i = 1; $i -le 15; $i++) {
+            try {
+              Invoke-WebRequest http://localhost:8100/ -UseBasicParsing -TimeoutSec 2 | Out-Null
+              $success = $true
+              break
+            } catch {
+              Start-Sleep -Seconds 2
+            }
+          }
+          if (-not $success) {
+            docker logs movie-list-container
+            exit 1
+          }
