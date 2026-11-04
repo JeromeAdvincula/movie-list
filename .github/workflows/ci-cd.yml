@@ -1,4 +1,3 @@
-
 jobs:
   continuous-integration:
     name: Continuous Integration
