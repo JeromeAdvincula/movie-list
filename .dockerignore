@@ -1,7 +1,12 @@
 node_modules
-.git
-.angular
-dist
 www
+.angular
+.git
+.vscode
 coverage
+*.log
 .env
+.env.*
+!.env.example
+
+
