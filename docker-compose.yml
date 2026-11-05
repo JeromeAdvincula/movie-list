@@ -1,10 +1,7 @@
 
 services:
   ionic-web:
-    image: movie-list:latest
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: ${DOCKERHUB_USERNAME:?Set DOCKERHUB_USERNAME}/movie-list:latest
     container_name: Anime-List
     ports:
       - "8080:80"

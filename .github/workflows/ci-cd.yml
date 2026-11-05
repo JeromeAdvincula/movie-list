@@ -63,3 +63,26 @@ jobs:
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/movie-list:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/movie-list:sha-${{ github.sha }}
+
+  deploy:
+    name: Deploy with Docker Compose
+    runs-on: self-hosted
+    needs: publish-docker-image
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    env:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Pull and deploy image
+        run: |
+          docker compose pull
+          docker compose up -d --remove-orphans
