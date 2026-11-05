@@ -36,9 +36,9 @@ jobs:
       - name: Build Movie List
         run: npm run build
 
-  publish-docker-image:
-    name: Publish Docker image
-    runs-on: ubuntu-latest
+  deploy:
+    name: Deploy with Docker Compose
+    runs-on: self-hosted
     needs: continuous-integration
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
@@ -46,43 +46,5 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v4
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Build and push image
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          push: true
-          tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/movie-list:latest
-            ${{ secrets.DOCKERHUB_USERNAME }}/movie-list:sha-${{ github.sha }}
-
-  deploy:
-    name: Deploy with Docker Compose
-    runs-on: self-hosted
-    needs: publish-docker-image
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    env:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-
-    steps:
-      - name: Checkout source code
-        uses: actions/checkout@v4
-
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Pull and deploy image
-        run: |
-          docker compose pull
-          docker compose up -d --remove-orphans
+      - name: Build and deploy with Docker Compose
+        run: docker compose up -d --build --remove-orphans
