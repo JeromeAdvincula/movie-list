@@ -1,0 +1,11 @@
+﻿{
+  "agentId": 22,
+  "agentName": "LAPTOP-8RGQ3BAE",
+  "poolId": 1,
+  "poolName": "Default",
+  "serverUrl": "https://pipelinesghubeus5.actions.githubusercontent.com/FDdcGRY6AoXhpQocm8Z5pAOkhWNg5vgHSbN9LRKIjNLXIyM8Gi/",
+  "gitHubUrl": "https://github.com/JeromeAdvincula/movie-list",
+  "workFolder": "_work",
+  "useV2Flow": true,
+  "serverUrlV2": "https://broker.actions.githubusercontent.com/"
+}
